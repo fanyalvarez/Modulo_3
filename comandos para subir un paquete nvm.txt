@@ -1,0 +1,70 @@
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo$ ls
+ 01.js   02.js  'canary?platform=linux'
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo$ cd ..
+fany@hi:~/Documentos/Kodemia/Bootcamp$ ls
+Clones  Modulo_1  Modulo_2  Modulo_3
+fany@hi:~/Documentos/Kodemia/Bootcamp$ cd Modulo_3
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo_3$ mkdir 02_npm
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo_3$ cd 02_npm
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo_3/02_npm$ touch 01.js
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo_3/02_npm$ npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help init` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (02_npm) 01_npm
+version: (1.0.0) 0.1
+Invalid version: "0.1"
+version: (1.0.0) 0.1.0
+description: Este paquete es un ejemplo de un proyecto node
+entry point: (01.js) 
+test command: 
+git repository: 
+keywords: ejemplo exercise node npm mi_primer_proyecto
+author: @fanyalvarez
+license: (ISC) MIT
+About to write to /home/fany/Documentos/Kodemia/Bootcamp/Modulo_3/02_npm/package.json:
+
+{
+  "name": "01_npm",
+  "version": "0.1.0",
+  "description": "Este paquete es un ejemplo de un proyecto node",
+  "main": "01.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ejemplo",
+    "exercise",
+    "node",
+    "npm",
+    "mi_primer_proyecto"
+  ],
+  "author": "@fanyalvarez",
+  "license": "MIT"
+}
+
+
+Is this OK? (yes) 
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo_3/02_npm$ code .
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo_3/02_npm$ npm install bootstrap
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN bootstrap@5.1.3 requires a peer of @popperjs/core@^2.10.2 but none is installed. You must install peer dependencies yourself.
+npm WARN 01_npm@0.1.0 No repository field.
+
++ bootstrap@5.1.3
+added 1 package from 2 contributors and audited 1 package in 1.147s
+
+1 package is looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo_3/02_npm$ ^C
+fany@hi:~/Documentos/Kodemia/Bootcamp/Modulo_3/02_npm$ 
