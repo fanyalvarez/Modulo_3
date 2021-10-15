@@ -61,7 +61,7 @@ const servirFrappe=(callback)=>{
 
 const preparar = (fruits, liquid, holder, topping) => {
 	colocarOrden(() => {
-		console.log("seleccionar orden")
+		console.log("seleccionar orden📝")
 		cortarFruta(() => {
 			console.log(`${fruits} cortada`)
 			colocarHielosYAgua(() => {
@@ -73,7 +73,7 @@ const preparar = (fruits, liquid, holder, topping) => {
 						seleccionarTopping(() => {
 							console.log(`${topping} seleccionado`)
 							servirFrappe(()=>{
-								console.log("Bebida servida 😃")
+								console.log("Bebida servida 🍧😃")
 							})
 						})
 					})
