@@ -2,7 +2,7 @@ const { request, response } = require("express");
 const express = require("express");
 const faker = require("faker");
 
-const router = require("./usersRouter");
+const router = express.Router();
 
 // users
 router.get("/", (request, response) => {

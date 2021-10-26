@@ -1,12 +1,12 @@
-const logErrors = (err, req, res, next) => {
+const logErrors = (error, req, res, next) => {
 	console.log("Se ejecuto logErrors");
-	console.error(err);
-	next(err);
+	console.error(error);
+	next(error);
   };
   
-  const errorHandler = (err, req, res, next) => {
+  const errororHandler = (error, req, res, next) => {
 	res.status(500).json({
-	  err,
+	  error,
 	});
   };
   
