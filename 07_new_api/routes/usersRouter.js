@@ -1,69 +1,86 @@
 const { request, response } = require("express");
 const express = require("express");
 const faker = require("faker");
-
+const user = require("../usercases/users")
 const router = express.Router();
 
-// users
-router.get("/", (request, response) => {
+// get
+router.get("/", async (request, response, next) => {
   const users = [];
   const { limit } = request.query;
-
-  for (let index = 0; index < limit; index++) {
-    users.push({
-      name: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      email: faker.internet.email(),
-      image: faker.image.animals(),
-    });
-  };
-
-  if (limit) {
-    // Si tiene limite entonces
+  /*
+    for (let index = 0; index < limit; index++) {
+      users.push({
+        name: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        image: faker.image.animals(),
+      });
+    };
+    if (limit) {
+      // Si tiene limite entonces
+      response.json({
+        ok: true,
+        payload: users,
+      });
+    } else {
+      //Si no tiene limite
+      response.json({
+        ok: false,
+        message: "users"
+      });
+    }
+  });*/
+  try {
+    const users = await user.get();
     response.json({
       ok: true,
-      payload: users,
-    });
-  } else {
-    //Si no tiene limite
-    response.json({
-      ok: false,
-      message: "users"
-    });
-  }
-});
-
-
-router.get("/:id", (request, response, next) => {
-  try {
-    const { id } = request.params;
-    response.json({
-      id,
-      name: "Fany",
-      lastName: "Alvarez",
-      email:"fany@hola.com",
-  })
+      message: "Done",
+      payload: { users },
+    })
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/users/", (request, response) => {
-  const body = request.body;
-  response.json({
-    ok: true,
-    message: "Created successfully",
-    payload: {
-      body,
-    },
-  });
+// get id
+router.get("/:id", async (request, response, next) => {
+  const { id } = request.params;
+
+  try {
+    const user = await user.getById(id);
+    response.json({
+      ok: true,
+      message: "Done!",
+      payload: { user },
+    })
+  } catch (error) {
+    next(error);
+  }
 });
 
+// post
+router.post("/", async (request, response, next) => {
+  try {
+    const userData = request.body;
+    const userCreated = await user.create(userData)
 
+    response.status(201).json({
+      ok: true,
+      message: "New users created",
+      payload: {
+        user: userCreated,
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+});
 
+// patch
 router.patch("/:id", (request, response) => {
   const { id } = request.params;
-  const { name, lastName, email, image } = request.body;
+  const { firstName, lastName, username, password, } = request.body;
 
   if (id == 99) {
     response.status(404).json({
@@ -75,19 +92,20 @@ router.patch("/:id", (request, response) => {
       ok: true,
       message: `User ${id} updated successfully`,
       payload: {
-        name,
+        firstName,
         lastName,
-        email,
-        image,
+        username,
+        password,
       },
     });
   }
 });
 
-router.delete("/:id", (req, res) => {
-  const { id } = req.params;
+// delete
+router.delete("/:id", (request, response) => {
+  const { id } = request.params;
   // Logica para eliminar
-  res.status(202).json({
+  response.status(202).json({
     ok: true,
     message: `User ${id} deleted successfully`,
   });

@@ -1,84 +1,90 @@
 const { request, response } = require("express");
-const express = require ("express")
+const express = require("express")
 const faker = require("faker");
+const categories = require("../usercases/categories");
 
-const router= express.Router ()
+const router = express.Router();
 
-//categories
-router.get("/", (request, response)=>{
-    const categories =[];
-    const { limit } = request.query; 
-  
-    for (let index = 0; index < limit; index++) {
-        categories.push({
-            categories: faker.commerce.department(),
+//get
+router.get("/", async (request, response, next) => {
+  const categories = [];
+  const { limit } = request.query;
+
+  try {
+    const categoriess = await categories.get();
+    response.json({
+      ok: true,
+      message: "Done!",
+      payload: { categoriess },
     });
-};
-    if (limit){
-        response.json({
-            ok:true, 
-            payload: categories,
-        });
-    }else {
-        response.json({
-            ok:false, 
-            message : "El límite es obligatorio"
-        }); 
-    }
+  } catch (error) {
+    next(error);
+  }
 });
-router.get("/:id", (request, response, next) => {
-    try {
-       const { id } = request.params;
-       response.json({
-         id,
-         category: "node"
-       });
-    } catch (error) {
-      next(error);
-    }
-  });
 
-router.post("/", (request, response) => {
-    const body = request.body;
-  
-    // Logica del negocio
-  
+//get by id
+router.get("/:id", async(request, response, next) => {
+  const { id } = request.params
+
+  try {
+    const categories = await categories.getById(id);
+    response.json({
+      ok: true,
+      message: "Done!",
+      payload: { product },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+//post
+router.post("/", async (request, next) => {
+  try {
+    const categoriesData = request.body;
+    const categoriesCreated = await categories.create(categoriesData);
+
     response.status(201).json({
       ok: true,
       message: "Created successfully",
       payload: {
-        body,
+        categories: categoriesCreated,
       },
     });
-  });
+  } catch (error) {
+    next(error);
+  }
+});
 
-  router.patch("/:id", (request, response) => {
-    const { id } = request.params;
-    const { categories } = request.body;
-  
-    if (id == 99) {
-      response.status(404).json({
-        ok: false,
-        message: "Category not found",
-      });
-    } else {
-      response.status(201).json({
-        ok: true,
-        message: `Category ${id} updated successfully`,
-        payload: {
-          categories,
-        },
-      });
-    }
-  });
-  
-  router.delete("/:id", (req, res) => {
-    const { id } = req.params;
-    // Logica para eliminar
-    res.status(202).json({
-      ok: true,
-      message: `Category ${id} deleted successfully`,
+//patch
+router.patch("/:id", (request, response,) => {
+  const { id } = request.params;
+  const { categories } = request.body;
+
+  if (id == 99) {
+    response.status(404).json({
+      ok: false,
+      message: "Categories not found",
     });
+  } else {
+    response.status(201).json({
+      ok: true,
+      message: `Categories ${id} updated successfully`,
+      payload: {
+        categories,
+      },
+    });
+  }
+});
+
+//delete
+router.delete("/:id", (request, response) => {
+  const { id } = request.params;
+  // Logica para eliminar
+  response.status(202).json({
+    ok: true,
+    message: `Categories ${id} deleted successfully`,
   });
-  
-  module.exports = router;
+});
+
+module.exports = router;

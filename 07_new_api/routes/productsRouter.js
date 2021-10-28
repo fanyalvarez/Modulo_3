@@ -1,14 +1,16 @@
-const { request, response } = require("express");
+//const { request, response } = require("express");
 const express = require("express");
 const faker = require("faker");
+const authHandler = require("../middlewares/authHandlers");
+const product = require("../usercases/products") //para usar mongoose
 
 const router = express.Router();
 
-//products
-router.get("/", (request, response) => {
-  const products = [];
-  const { limit } = request.query;
-
+//get
+router.get("/", async (request, response, next) => {
+  // products = [];
+  //const { limit } = request.query;
+  /*esto es donde jalaba los productos, con mongo ya no se usa
   for (let index = 0; index < limit; index++) {
     products.push({
       name: faker.commerce.productName(),
@@ -16,12 +18,11 @@ router.get("/", (request, response) => {
       image: faker.image.imageUrl(),
     });
   }
-
   if (limit) {
     // Si tiene limite entonces
     response.json({
       ok: true,
-      payload: products,
+      payload:{ product},
     });
   } else {
     //Si no tiene limite
@@ -30,62 +31,90 @@ router.get("/", (request, response) => {
       message: "El límite es obligatorio",
     });
   }
-});
-
-router.get("/:id", (request, response, next) => {
+  */
   try {
-    const { id } = request.params;
+    const products = await product.get()
     response.json({
-      id,
-      name: "Product 1",
-      price: 1000,
+      ok: true,
+      message: "Done",
+      payload: { products },
+    });
+  } catch (error) {
+    next(error);
+  }
+})
+
+//get by id
+router.get("/:id", async (request, response, next) => {
+  const { id } = request.params;
+
+  try {
+    const productsid = await product.getById(id);
+    response.json({
+      ok: true,
+      message: "Done!",
+      payload: { productsid },
     });
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/", (request, response) => {
-  const body = request.body;
-
-  // Logica del negocio
-  response.status(201).json({
-    ok: true,
-    message: "Created successfully",
-    payload: {
-      body,
-    },
-  });
-});
-
-router.patch("/:id", (request, response) => {
-  const { id } = request.params;
-  const { name, price } = request.body;
-
-  if (id == 99) {
-    response.status(404).json({
-      ok: false,
-      message: "Product not found",
-    });
-  } else {
+//post
+router.post('/', async (request, response, next) => {
+  try {
+    const productData = request.body;
+    const productCreated = await product.created(productData);
     response.status(201).json({
       ok: true,
-      message: `Product ${id} updated successfully`,
+      message: "Created successfully",
       payload: {
-        name,
-        price,
+        product: productCreated
       },
+    })
+  }
+  catch (error) {
+    next(error);
+  }
+})
+
+//patch
+router.patch('/:id', async (request, response, next) => {
+  try {
+    const { id } = request.params;
+    //const {name ,price}=request.body
+    const productData = request.body;
+    const productUpdate = await product.updated(id, productData);
+
+    response.status(201).json({
+      ok: true,
+      message: `Product ${id} successfully`,
+      payload: {
+        productUpdate
+      },
+    })
+  } catch (error) {
+    next(error)
+    response.status(404).json({
+      ok: false,
+      message: "Product not found"
     });
   }
-});
+})
 
-router.delete("/:id", (req, res) => {
-  const { id } = req.params;
-  // Logica para eliminar
-  res.status(202).json({
-    ok: true,
-    message: `Product ${id} deleted successfully`,
-  });
+//delete
+router.delete("/:id", (request, response, next) => {
+  const { id } = request.params;
+  try {
+    // Logica para eliminar
+    const productDel = product.del(id)
+    response.status(202).json({
+      ok: true,
+      message: `Product ${id} deleted successfully`,
+    });
+  } catch (error) {
+    next(error)
+  }
 });
 
 module.exports = router;
